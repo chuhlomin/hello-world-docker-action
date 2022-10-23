@@ -10,11 +10,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Login to CR
+        uses: docker/login-action@v2
+        with:
+          username: chuhlomin
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: chuhlomin/hello-world-docker-action:latest
+
       - name: Hello world action step
         uses: ./ # Uses an action in the root directory
         id: hello
         with:
-          who-to-greet: 'Mona the Octocat'
+          who_to_greet: 'Mona the Octocat'
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
